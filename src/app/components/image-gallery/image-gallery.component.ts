@@ -24,9 +24,7 @@ export class ImageGalleryComponent implements OnInit, OnChanges {
   }
 
   searchTextChanged(event: any) {
-    let arr = this.images.filter(
-      (image) => image.title.toLowerCase().indexOf(event.toLowerCase()) === 0
-    );
+    let arr = this.images.filter((image) => image.title.toLowerCase().includes(event.toLowerCase()) || image.tag.toLowerCase().includes(event.toLowerCase()));
     this.filteredImages = arr.length
       ? arr
       : [{ name: 'No Item found', code: 'null' }];
