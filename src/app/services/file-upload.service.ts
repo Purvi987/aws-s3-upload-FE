@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class FileUploadService {
-  private baseUrl = 'http://localhost:3000/api';
+  private baseUrl = 'https://aws-s3-upload-server.onrender.com/api';
   private headers = {
     "Content-Type": "multipart/form-data"
   }
