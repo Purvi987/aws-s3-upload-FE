@@ -1,0 +1,15 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<div class="flex-container">
+  <mat-form-field class="search-list-input">
+    <input type="text" matInput (input)="searchTextChanged($any($event.target).value)"/>
+    <mat-placeholder
+      >Search
+      <mat-icon style="float: right">search</mat-icon>
+    </mat-placeholder>
+  </mat-form-field>
+  <div class="container-all">
+    <div class="container" *ngFor="let image of filteredImages">
+      <img src="{{ image.imageUrl }}" loading="lazy" />
+    </div>
+  </div>
+</div>
