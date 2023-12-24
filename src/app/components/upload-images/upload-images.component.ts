@@ -73,7 +73,7 @@ export class UploadImagesComponent implements OnInit {
 
   getListImages() {
     this.uploadService.geListImage().subscribe((data) => {
-      this.galleryImages = data.image;
+      this.images = data.image;
     });
     this.getImageInfo();
   }
@@ -82,7 +82,7 @@ export class UploadImagesComponent implements OnInit {
     this.dataService.getdata().subscribe((info: any) => {
       if (info) {
         this.imageInfo = info;
-      //  this.mapIamgeInfo();
+        this.mapIamgeInfo();
       }
     });
   }
