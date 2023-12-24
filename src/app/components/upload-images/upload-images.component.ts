@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { FileUploadService } from '../../services/file-upload.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DataService } from '../../services/data.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnInit } from "@angular/core";
+import { HttpResponse } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { FileUploadService } from "../../services/file-upload.service";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { DataService } from "../../services/data.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
-  selector: 'app-upload-images',
-  templateUrl: './upload-images.component.html',
-  styleUrls: ['./upload-images.component.scss'],
+  selector: "app-upload-images",
+  templateUrl: "./upload-images.component.html",
+  styleUrls: ["./upload-images.component.scss"],
 })
 export class UploadImagesComponent implements OnInit {
   selectedFiles?: FileList;
@@ -27,16 +27,16 @@ export class UploadImagesComponent implements OnInit {
   galleryImages: any = [];
   filteredImages: any = [];
   formGroup!: FormGroup;
-  imageUrl = '../../../assets/images/placeholder.jpg';
-  currentKey: any = '';
+  imageUrl = "../../../assets/images/placeholder.jpg";
+  currentKey: any = "";
   imageInfo: any = [];
 
   dataObj: any = {
-    id: '',
-    image: '',
-    key: '',
-    title: '',
-    tag: '',
+    id: "",
+    image: "",
+    key: "",
+    title: "",
+    tag: "",
   };
 
   constructor(
@@ -44,8 +44,7 @@ export class UploadImagesComponent implements OnInit {
     private formBuilder: FormBuilder,
     private dataService: DataService,
     private snackBar: MatSnackBar
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.getListImages();
@@ -56,7 +55,7 @@ export class UploadImagesComponent implements OnInit {
   createForm() {
     this.formGroup = this.formBuilder.group({
       image: [null],
-      key: [''],
+      key: [""],
       title: [null, Validators.required],
       tag: [null, Validators.required],
     });
@@ -66,8 +65,8 @@ export class UploadImagesComponent implements OnInit {
     this.uploadService.getPreSignUrl().subscribe((data) => {
       this.url = data.url;
       this.currentKey = data.url
-        .split('/')
-        [data.url.split('/').length - 1].split('?')[0];
+        .split("/")
+        [data.url.split("/").length - 1].split("?")[0];
     });
   }
 
@@ -91,7 +90,7 @@ export class UploadImagesComponent implements OnInit {
     this.galleryImages = this.images.map((item1: any) => {
       const common = this.imageInfo.find(
         (item2: any) =>
-          item2.key == item1.split('/')[item1.split('/').length - 1]
+          item2.key == item1.split("/")[item1.split("/").length - 1]
       );
       return { imageUrl: item1, ...common };
     });
@@ -118,18 +117,18 @@ export class UploadImagesComponent implements OnInit {
     }
   }
 
-  upload(idx: number, file: File): void {
+  upload(idx: number, file: File, data: any): void {
     this.progressInfos[idx] = { value: 0, fileName: file.name };
     if (file) {
       this.uploadService.uploadFile(this.url, this.file).subscribe(
         (event: any) => {
-          this.getListImages();
+          this.insertData(data);
           this.formGroup.reset();
-          this.imageUrl = '../../../assets/images/placeholder.jpg';
-          this.snackBar.open('Image uploaded successfully!!', '', {
+          this.imageUrl = "../../../assets/images/placeholder.jpg";
+          this.snackBar.open("Image uploaded successfully!!", "", {
             duration: 2000,
-            verticalPosition: 'top',
-            panelClass: ['custom-success'],
+            verticalPosition: "top",
+            panelClass: ["custom-success"],
           });
           // if (event.type === HttpEventType.UploadProgress) {
           //   this.progressInfos[idx].value = Math.round(
@@ -137,20 +136,20 @@ export class UploadImagesComponent implements OnInit {
           //   );
           // }
           if (event instanceof HttpResponse) {
-            const msg = file.name + ': Successful!';
+            const msg = file.name + ": Successful!";
             this.message.push(msg);
           }
         },
         (err: any) => {
           this.progressInfos[idx].value = 0;
-          let msg = file.name + ': Failed!';
+          let msg = file.name + ": Failed!";
 
           if (err.error || err.error.message) {
-            msg += ' ' + err.error.match(/<Message>(.*?)<\/Message>/)[0];
-            this.snackBar.open(msg, '', {
+            msg += " " + err.error.match(/<Message>(.*?)<\/Message>/)[0];
+            this.snackBar.open(msg, "", {
               duration: 2000,
-              verticalPosition: 'top',
-              panelClass: ['custom-error'],
+              verticalPosition: "top",
+              panelClass: ["custom-error"],
             });
           }
           this.message.push(msg);
@@ -159,26 +158,31 @@ export class UploadImagesComponent implements OnInit {
     }
   }
 
-  uploadFiles(): void {
-    this.message = [];
-    if (this.selectedFiles) {
-      for (let i = 0; i < this.selectedFiles.length; i++) {
-        this.upload(i, this.selectedFiles[i]);
-      }
-    }
-  }
-
-  async onSubmit(data: any) {
-    await this.uploadFiles();
-    this.dataObj.id = '';
+  insertData(data: any) {
+    this.dataObj.id = "";
     this.dataObj.image = this.file.name;
     this.dataObj.key = this.currentKey;
     this.dataObj.title = data.title;
     this.dataObj.tag = data.tag;
     this.dataService.addData(this.dataObj).then((data) => {
       if (data) {
+
+        location.reload();
         console.log(`Hi ${data}`);
       }
     });
+  }
+
+  uploadFiles(data: any): void {
+    this.message = [];
+    if (this.selectedFiles) {
+      for (let i = 0; i < this.selectedFiles.length; i++) {
+        this.upload(i, this.selectedFiles[i], data);
+      }
+    }
+  }
+
+  async onSubmit(data: any) {
+    await this.uploadFiles(data);
   }
 }
