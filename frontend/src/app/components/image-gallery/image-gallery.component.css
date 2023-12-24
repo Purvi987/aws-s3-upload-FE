@@ -1,0 +1,57 @@
+::ng-deep .mat-dialog-container {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  
+  ::ng-deep .cdk-overlay-dark-backdrop {
+    background-color: rgba(19, 16, 16, 0.9);
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    background-color: #111111;
+    transition: 0.5s ease;
+  }
+  
+  .container-all {
+    width: fit-content;
+    margin: 20px auto;
+    height: auto;
+  }
+  .container {
+    width: calc(33% - 6px);
+    overflow: hidden;
+    height: fit-content;
+    margin: 3px;
+    padding: 0;
+    display: block;
+    position: relative;
+    float: left;
+  }
+  img {
+    width: 100%;
+    transition-duration: 0.3s;
+    max-width: 100%;
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  @media only screen and (max-width: 900px) {
+    .container {
+      width: calc(50% - 6px);
+    }
+  }
+  @media only screen and (max-width: 400px) {
+    .container {
+      width: 100%;
+    }
+  }
+  
